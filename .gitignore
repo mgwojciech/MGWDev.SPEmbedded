@@ -1,0 +1,4 @@
+bin
+client-app/node_modules
+obj
+appsettings.Development.json
