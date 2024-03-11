@@ -25,6 +25,9 @@ export function ContainerPicker(props: IContainerPickerProps) {
         containerService.getContainers(containerTypeId).then((containers) => {
             setContainers(containers);
             setIsLoading(false);
+        }).catch((error) => {
+            console.error(error);
+            setIsLoading(false);
         });
     }, [spClient, siteUrl, containerTypeId])
 

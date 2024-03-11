@@ -15,6 +15,12 @@ import { ArrowDownload16Regular, Delete16Regular, Open16Regular } from "@fluentu
 import { GraphDriveItemService } from "../services/GraphDriveItemService";
 import { UploadFile } from "./UploadFile";
 import { NewFolder } from "./NewFolder";
+import { DriveBreadcrumb } from "./DriveBreadcrumb";
+import { GraphPersona } from "./GraphPersona";
+import { ContainerPermissions } from "./ContainerPermissions";
+import { useSP } from "../context/SPContext";
+import { SPContainerService } from "../services/SPContainerService";
+import { ContainerToolbar } from "./ContainerToolbar";
 
 export interface IContainerViewProps {
     containerId: string;
@@ -22,12 +28,18 @@ export interface IContainerViewProps {
 
 export function ContainerView(props: IContainerViewProps) {
     const { graphClient } = useGraph();
+    const { spClient, siteUrl } = useSP();
     const [isLoading, setIsLoading] = React.useState<boolean>(true);
     const [driveItems, setDriveItems] = React.useState<GraphItem[]>([]);
     const [parent, setParent] = React.useState<GraphItem | undefined>(undefined);
+    const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
     const driveItemService: GraphDriveItemService = React.useMemo(() => {
         return new GraphDriveItemService(graphClient, props.containerId);
     }, [props.containerId])
+
+    const containerService = React.useMemo(() => {
+        return new SPContainerService(spClient, siteUrl);
+    }, [spClient, siteUrl])
     const loadData = async () => {
         var items = await driveItemService.getDriveItems(parent?.id);
         setDriveItems(items);
@@ -72,6 +84,15 @@ export function ContainerView(props: IContainerViewProps) {
             }
         }),
         createTableColumn({
+            columnId: "createdBy",
+            renderHeaderCell: () => {
+                return "Created by"
+            },
+            renderCell: (item) => {
+                return <GraphPersona id={item.createdBy.user.id} showSecondaryText />
+            }
+        }),
+        createTableColumn({
             columnId: "lastModified",
             renderHeaderCell: () => {
                 return "Last modified"
@@ -110,18 +131,42 @@ export function ContainerView(props: IContainerViewProps) {
 
 
     return <div>
-        <UploadFile parentId={parent?.id} driveItemService={driveItemService} onUploaded={() => {
-            loadData();
-        }} />
         <div>
-            <NewFolder parentId={parent?.id} onFolderCreated={() => {
-                loadData();
-            }} driveItemService={driveItemService} />
+            <ContainerToolbar
+                containerId={props.containerId}
+                containerService={containerService}
+                driveItemService={driveItemService}
+                selectedDriveItemsId={[]}
+                onActionExecuted={loadData}
+            />
         </div>
+        <div><DriveBreadcrumb onNavigate={(id) => {
+            if (id === props.containerId) {
+                setParent(undefined);
+                return;
+            }
+            //@ts-ignore
+            setParent({ id, name: "" });
+        }} container={parent || {
+            id: props.containerId,
+            name: "Root"
+        }} /></div>
         <div>
             <DataGrid
                 items={driveItems}
                 columns={columns}
+                selectedItems={selectedItems}
+                selectionMode="multiselect"
+                getRowId={(item) => item.id}
+                onSelectionChange={(event, data) => {
+                    var newSelectedItems: string[] = [];
+                    if (data.selectedItems) {
+                        selectedItems.forEach(i => {
+                            newSelectedItems.push(i)
+                        });
+                    }
+                    setSelectedItems(newSelectedItems);
+                }}
             >
                 <DataGridHeader>
                     <DataGridRow

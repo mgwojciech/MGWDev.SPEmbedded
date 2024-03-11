@@ -9,7 +9,7 @@ import { GraphBasedSPContextProvider } from './context/GraphBasedSPContext';
 
 function App() {
   const authService = new TokenBrokerAuthService()
-  const [selectedContainer, setSelectedContainer] = React.useState<string | undefined>(undefined);
+  const [selectedContainer, setSelectedContainer] = React.useState<string | undefined>("b!zh3lMGj9s0qJ_SNS7sirLgpkTlZkR5ZBuNeW1XYL-zbntg8MmanSR6Ei-NnHv8iC");
   return (
     <AuthenticationContextProvider authProvider={authService} >
       <GraphContextProvider>
