@@ -5,10 +5,10 @@ import { Input, Button, Field, makeStyles, shorthands, tokens, Spinner } from "@
 export interface ICreateContainerFormProps {
     onContainerCreated?: (containerId: string, containerName: string) => void;
     containerService: SPContainerService;
+    containerTypeId: string;
 
 }
 
-const containerTypeId = import.meta.env.VITE_CONTAINER_TYPE_ID;
 
 export const useContainerFormStyles = makeStyles({
     root: {
@@ -31,9 +31,9 @@ export function CreateContainerForm(props: ICreateContainerFormProps) {
                 setContainerName(event.target.value);
             }} />
         </Field>
-        <Button appearance="primary" icon={loading ? <Spinner size="tiny" /> : undefined}  onClick={() => {
+        <Button disabled={!containerName} data-testid="create-container-btn" appearance="primary" icon={loading ? <Spinner size="tiny" /> : undefined}  onClick={() => {
             setLoading(true);
-            props.containerService.createContainer(containerName, containerTypeId).then((containerId) => {
+            props.containerService.createContainer(containerName, props.containerTypeId).then((containerId) => {
                 setLoading(false);
                 props.onContainerCreated && props.onContainerCreated(containerId, containerName);
             })

@@ -7,9 +7,10 @@ import { CreateContainerForm } from "./CreateContainerForm";
 
 export interface IContainerPickerProps {
     onContainerPicked: (containerId?: string) => void;
+    containerService?: SPContainerService;
+    containerTypeId: string;
 }
 
-const containerTypeId = import.meta.env.VITE_CONTAINER_TYPE_ID;
 
 export function ContainerPicker(props: IContainerPickerProps) {
     const { spClient, siteUrl } = useSP();
@@ -17,19 +18,19 @@ export function ContainerPicker(props: IContainerPickerProps) {
     const [containers, setContainers] = React.useState<IContainer[]>([]);
     const [isDrawerOpen, setIsDrawerOpen] = React.useState<boolean>(false);
 
-    const containerService = React.useMemo(() => {
+    const containerService = props.containerService ||  React.useMemo(() => {
         return new SPContainerService(spClient, siteUrl);
     }, [spClient, siteUrl])
 
     React.useEffect(() => {
-        containerService.getContainers(containerTypeId).then((containers) => {
+        containerService.getContainers(props.containerTypeId).then((containers) => {
             setContainers(containers);
             setIsLoading(false);
         }).catch((error) => {
             console.error(error);
             setIsLoading(false);
         });
-    }, [spClient, siteUrl, containerTypeId])
+    }, [spClient, siteUrl, props.containerTypeId])
 
     if (isLoading) {
         return <Spinner />
@@ -42,7 +43,7 @@ export function ContainerPicker(props: IContainerPickerProps) {
                 <DrawerHeaderTitle>New Container</DrawerHeaderTitle>
             </DrawerHeader>
             <DrawerBody>
-                <CreateContainerForm containerService={containerService} onContainerCreated={(id, name) => {
+                <CreateContainerForm containerTypeId={props.containerTypeId} containerService={containerService} onContainerCreated={(id, name) => {
                     setContainers([...containers, { id: id, displayName: name }]);
                     setIsDrawerOpen(false);
                 }} />

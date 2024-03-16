@@ -23,6 +23,9 @@ export class SPContainerService {
                 "Content-Type": "application/json"
             }
         });
+        if(!response.ok){
+            throw new Error("Error creating container: " + response.statusText);
+        }
         const json = await response.json();
         return json.id;
     }
