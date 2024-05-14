@@ -71,7 +71,7 @@ export function GraphPersona(props: IGraphPersonaProps) {
     return <Spinner />
   }
 
-  const primaryText = user?.displayName || props.name || props.title || props.id;
+  const primaryText = props.name || user?.displayName || props.title || props.id;
 
   return (
     <Persona

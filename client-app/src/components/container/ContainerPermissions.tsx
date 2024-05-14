@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { IContainerPermission } from '../model/IContainer';
-import { SPContainerService } from '../services/SPContainerService';
-import { GraphPersona } from './GraphPersona';
-import { PeoplePicker } from './PeoplePicker';
+import { IContainerPermission } from '../../model/IContainer';
+import { SPContainerService } from '../../services/SPContainerService';
+import { GraphPersona } from './../GraphPersona';
+import { PeoplePicker } from './../form/PeoplePicker';
 import { Button, Radio, RadioGroup } from '@fluentui/react-components';
 import { IUser } from 'mgwdev-m365-helpers';
 

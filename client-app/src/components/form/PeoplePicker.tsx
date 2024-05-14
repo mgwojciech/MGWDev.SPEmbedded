@@ -1,7 +1,7 @@
 import * as React from "react";
 import { IUser, PeopleProvider } from "mgwdev-m365-helpers";
 import { EntityPicker, IAbstractGraphEntityPickerProps } from "./EntityPicker";
-import { useGraph } from "../context/GraphContext";
+import { useGraph } from "../../context/GraphContext";
 
 export interface IPeoplePickerProps extends Partial<IAbstractGraphEntityPickerProps<IUser>> {
 

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { SPContainerService } from "../services/SPContainerService";
+import { SPContainerService } from "../../services/SPContainerService";
 import { Input, Button, Field, makeStyles, shorthands, tokens, Spinner } from "@fluentui/react-components";
 
 export interface ICreateContainerFormProps {

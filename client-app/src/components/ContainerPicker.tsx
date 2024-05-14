@@ -3,7 +3,7 @@ import { useSP } from "../context/SPContext";
 import { Dropdown, Spinner, Option, Drawer, DrawerHeader, DrawerHeaderTitle, DrawerBody, Button } from "@fluentui/react-components";
 import { IContainer } from "../model/IContainer";
 import { SPContainerService } from "../services/SPContainerService";
-import { CreateContainerForm } from "./CreateContainerForm";
+import { CreateContainerForm } from "./container/CreateContainerForm";
 
 export interface IContainerPickerProps {
     onContainerPicked: (containerId?: string) => void;

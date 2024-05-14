@@ -1,13 +1,16 @@
 import * as React from "react";
 import { useAuthentication } from "./AuthenticationContext";
 import { AuthHttpClient, BatchGraphClient, FetchHttpClient, IHttpClient } from "mgwdev-m365-helpers";
+import { GroupsService } from "../services/GroupsService";
 
 export interface IGraphContextProps {
     graphClient: IHttpClient;
+    groupsService?: GroupsService;
 }
 
 export interface IGraphContextProviderProps extends React.PropsWithChildren<{}> {
     graphClient?: IHttpClient;
+    groupsService?: GroupsService;
 }
 export const GraphContext = React.createContext<IGraphContextProps>({
     graphClient: new FetchHttpClient()
@@ -27,6 +30,9 @@ export const GraphContextProvider = (props: IGraphContextProviderProps) => {
     }
 
     const [graphClient, setGraphClient] = React.useState<IHttpClient | undefined>(getGraphClient());
+    const groupsService = React.useMemo(() => {
+        return props.groupsService || new GroupsService(graphClient!);
+    }, [props.groupsService, graphClient]);
 
     React.useEffect(() => {
         setGraphClient(getGraphClient());
@@ -34,7 +40,8 @@ export const GraphContextProvider = (props: IGraphContextProviderProps) => {
 
     return (
         graphClient && <GraphContext.Provider value={{
-            graphClient: graphClient
+            graphClient: graphClient,
+            groupsService: groupsService
         }}>
             {props.children}
         </GraphContext.Provider>

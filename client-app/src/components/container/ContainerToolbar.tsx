@@ -1,7 +1,7 @@
 import * as React from "react";
-import { SPContainerService } from "../services/SPContainerService";
-import { GraphDriveItemService } from "../services/GraphDriveItemService";
-import { Dialog, DialogBody, DialogContent, DialogSurface, DialogTitle, Menu, MenuButton, MenuItem, MenuList, MenuPopover, MenuTrigger, Toolbar, ToolbarButton, ToolbarDivider, ToolbarGroup } from "@fluentui/react-components";
+import { SPContainerService } from "../../services/SPContainerService";
+import { GraphDriveItemService } from "../../services/GraphDriveItemService";
+import { Dialog, DialogBody, DialogContent, DialogSurface, DialogTitle, Menu, MenuItem, MenuList, MenuPopover, MenuTrigger, Toolbar, ToolbarButton, ToolbarDivider, ToolbarGroup } from "@fluentui/react-components";
 import { ArrowUpload16Regular, AddSquare16Regular, PersonLock16Regular } from "@fluentui/react-icons";
 import { UploadFile } from "./UploadFile";
 import { NewFolder } from "./NewFolder";

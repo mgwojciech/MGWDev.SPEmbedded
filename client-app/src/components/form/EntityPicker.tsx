@@ -31,7 +31,10 @@ export function EntityPicker<T extends IEntityWithIdAndDisplayName>(props: IAbst
     const loadEntities = (searchText: string) => {
         DebounceHandler.debounce(`entityPicker-${props.additionalKey}`, async () => {
             setIsLoading(true);
-            const queriedEntities = await props.onDataRequested(searchText);
+            let queriedEntities = await props.onDataRequested(searchText);
+            if(props.value){
+                queriedEntities.push(...props.value);
+            }
             //get distinct entities
             setEntities([...queriedEntities, ...selectedEntities].reduce((acc: T[], current) => {
                 const x = acc.find(item => item.id === current.id);
@@ -47,6 +50,8 @@ export function EntityPicker<T extends IEntityWithIdAndDisplayName>(props: IAbst
 
     React.useEffect(() => {
         loadEntities("");
+        setSelectedEntities(props.value || []);
+        setInputValue((props.value || []).map((x) => x.displayName).join(", "));
     }, [props.value]);
     return <Field label={props.label} hint={props.description}>
         <Combobox value={inputValue}
